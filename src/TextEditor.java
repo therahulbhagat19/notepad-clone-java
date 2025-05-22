@@ -1,7 +1,8 @@
 import javax.swing.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-
-public class TextEditor {
+public class TextEditor implements ActionListener {
     
     JFrame frame;
     JMenuBar menubar;
@@ -24,6 +25,13 @@ public class TextEditor {
         newfile = new JMenuItem("New Window");
         openfile = new JMenuItem("Open File");
         savefile = new JMenuItem("Save File");
+        //Add action listener to file menu items
+        newfile.addActionListener(this);
+        openfile.addActionListener(this);
+        savefile.addActionListener(this);
+
+
+
         //Add menu items to file menu
         file.add(newfile);
         file.add(openfile);
@@ -34,6 +42,13 @@ public class TextEditor {
         paste = new JMenuItem("Paste");
         selectall = new JMenuItem("Select All");
         close = new JMenuItem("Close");
+        //add action listener to edit menu items
+        cut.addActionListener(this);
+        copy.addActionListener(this);
+        paste.addActionListener(this);
+        selectall.addActionListener(this);
+        close.addActionListener(this);
+
         //Adding to edit Menu
         edit.add(cut);
         edit.add(copy);
@@ -56,6 +71,31 @@ public class TextEditor {
         frame.setBounds(0,0,400,400);
         frame.setVisible(true);
         frame.setLayout(null);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent actionevent){
+        if(actionevent.getSource()==cut){
+            //perform cut
+            textarea.cut();
+        }
+        if(actionevent.getSource()==copy){
+            //perform copy
+            textarea.copy();
+        }
+        if(actionevent.getSource()==paste){
+            //perform paste
+            textarea.paste();
+        }
+        if(actionevent.getSource()==selectall){
+            //perform selectall
+            textarea.selectAll();
+        }
+        if(actionevent.getSource()==close){
+            //perform close
+            System.exit(0);
+        }
+
     }
 
 
