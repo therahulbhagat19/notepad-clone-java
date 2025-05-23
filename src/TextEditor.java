@@ -1,6 +1,13 @@
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.*;
+
+import javax.swing.border.EmptyBorder;
+import java.awt.BorderLayout;
+
+
+
 
 public class TextEditor implements ActionListener {
     
@@ -64,11 +71,22 @@ public class TextEditor implements ActionListener {
         //set the menubar to the frame
         frame.setJMenuBar(menubar);
 
-        //Add text area to frame
-        frame.add(textarea);
+        //Create content pane
+        JPanel panel = new JPanel();
+        panel.setBorder(new EmptyBorder(5,5,5,5));
+        panel.setLayout(new BorderLayout(0,0));
+        //Add text area to the panel
+        panel.add(textarea,BorderLayout.CENTER);
+        //Create Scroll pane
+        JScrollPane scrollpane = new JScrollPane(textarea,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        //Add scroll pane to panel
+        panel.add(scrollpane);
+        //Add panel to frame
+        frame.add(panel);
 
         //Setting dimensions of the frame           
         frame.setBounds(0,0,400,400);
+        frame.setTitle("Rahul's Text Editor");
         frame.setVisible(true);
         frame.setLayout(null);
     }
@@ -94,6 +112,51 @@ public class TextEditor implements ActionListener {
         if(actionevent.getSource()==close){
             //perform close
             System.exit(0);
+        }
+        if(actionevent.getSource()==openfile){
+            JFileChooser filechooser = new JFileChooser("/");
+            int chooseoption = filechooser.showOpenDialog(null);
+            if(chooseoption==JFileChooser.APPROVE_OPTION){
+               File file = filechooser.getSelectedFile();
+               String filepath = file.getPath();
+                try{
+                    FileReader filereader = new FileReader(filepath); 
+                    BufferedReader bufferedreader = new BufferedReader(filereader);
+                    String inter = "", output = "";
+                    while((inter=bufferedreader.readLine())!=null){
+                        output+=inter+"\n";
+                    }
+                    textarea.setText(output);
+                }
+                catch(FileNotFoundException filenotfoundexception){
+                    filenotfoundexception.printStackTrace();
+                }
+                catch(IOException ioexception){
+                    ioexception.printStackTrace();
+
+                }
+
+            }
+        }
+        if(actionevent.getSource()==savefile){
+            JFileChooser filechooser = new JFileChooser("/");
+            int chooseoption = filechooser.showSaveDialog(null);
+            if(chooseoption==JFileChooser.APPROVE_OPTION){
+                File file = new File(filechooser.getSelectedFile().getAbsolutePath()+".txt");
+                try{
+                    FileWriter filewriter = new FileWriter(file);
+                    BufferedWriter bufferedwriter = new BufferedWriter(filewriter);
+                    textarea.write(bufferedwriter);
+                    bufferedwriter.close();
+                }
+                catch(IOException ioexception){
+                    ioexception.printStackTrace();
+                }
+            }
+
+        }
+        if(actionevent.getSource()==newfile){
+            TextEditor newtexteditor = new TextEditor();
         }
 
     }
